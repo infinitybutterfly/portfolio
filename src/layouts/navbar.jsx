@@ -9,6 +9,10 @@ const Navbar = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   // Helper function to apply the active class dynamically
   const navClass = ({ isActive }) => (isActive ? 'nav-item active' : 'nav-item');
 
@@ -24,15 +28,15 @@ const Navbar = () => {
       {/* Brand/Logo Section */}
       <div className="nav-brand">
         {/* Use a standard link for the logo to go home */}
-        <NavLink to="/" className="logo-text">Ankit <span>Shiv</span></NavLink>
+        <NavLink to="/" className="logo-text" onClick={closeMobileMenu}>Ankit <span>Shiv</span></NavLink>
       </div>
       
       {/* Navigation Links */}
       <div className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
-        <NavLink to="/about" className={navClass}>About</NavLink>
-        <NavLink to="/projects" className={navClass}>Projects</NavLink>
-        <NavLink to="/experience" className={navClass}>Experience</NavLink>
-        <NavLink to="/contact" className={navClass}>Contact</NavLink>
+        <NavLink to="/about" className={navClass} onClick={closeMobileMenu}>About</NavLink>
+        <NavLink to="/projects" className={navClass} onClick={closeMobileMenu}>Projects</NavLink>
+        <NavLink to="/experience" className={navClass} onClick={closeMobileMenu}>Experience</NavLink>
+        <NavLink to="/contact" className={navClass} onClick={closeMobileMenu}>Contact</NavLink>
         <div className="mobile-cta-wrapper">
           <button className="cta-button" onClick={handleResumeClick}>Resume</button>
         </div>
