@@ -1,0 +1,179 @@
+/* Base Navbar Styling */
+.portfolio-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 5%;
+  background: rgba(255, 255, 255, 0.85); /* Slight transparency */
+  backdrop-filter: blur(12px); /* Glassmorphism effect */
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+/* Typography & Brand */
+.nav-brand .logo-text {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #1f2937;
+  text-decoration: none;
+  letter-spacing: -0.5px;
+}
+
+.nav-brand .logo-text span {
+  color: #6366f1; /* Indigo accent color */
+}
+
+/* Link Container */
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+/* Individual Links & Hover Animation */
+.nav-item {
+  text-decoration: none;
+  color: #4b5563;
+  font-weight: 500;
+  font-size: 1rem;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-item:hover, 
+.nav-item.active {
+  color: #6366f1;
+}
+
+/* Smooth animated underline */
+.nav-item::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -6px;
+  left: 0;
+  background-color: #6366f1;
+  transition: width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border-radius: 2px;
+}
+
+.nav-item:hover::after, 
+.nav-item.active::after {
+  width: 100%;
+}
+
+/* Call to Action Button */
+.cta-button {
+  padding: 0.6rem 1.5rem;
+  background-color: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cta-button:hover {
+  background-color: #4f46e5;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* Hide the mobile wrapper version by default on desktop screens */
+.mobile-cta-wrapper {
+  display: none;
+}
+
+/* Mobile Menu Button (Hidden on Desktop) */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 5px;
+  padding: 5px;
+}
+
+.hamburger-line {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: #1f2937;
+  transition: all 0.3s ease;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  /* Hide original desktop layout button */
+  .desktop-cta {
+    display: none; 
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.98);
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-in-out;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-links.active {
+    max-height: 400px; /* Increased slightly to cleanly accommodate the button */
+  }
+
+  .nav-item {
+    padding: 1.2rem 2rem;
+    width: 100%;
+    border-bottom: 1px solid #f3f4f6;
+    box-sizing: border-box;
+  }
+
+  .nav-item::after {
+    display: none; /* Remove underline animation on mobile */
+  }
+
+  /* Display and style the wrapper containing the button at the bottom of the tray */
+  .mobile-cta-wrapper {
+    display: block;
+    width: 100%;
+    padding: 1.5rem 2rem;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  /* Optional stretch effect so the button fits beautifully on small viewports */
+  .mobile-cta-wrapper .cta-button {
+    width: 100%;
+    padding: 0.8rem 1.5rem;
+  }
+
+  /* Hamburger to X animation */
+  .mobile-menu-btn.open .hamburger-line:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .mobile-menu-btn.open .hamburger-line:nth-child(2) {
+    opacity: 0;
+  }
+  .mobile-menu-btn.open .hamburger-line:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+}
