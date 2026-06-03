@@ -628,12 +628,23 @@
   }
 
   .modal-overlay.fade-in {
-    padding: 16px; 
+    padding: 10px; 
+    align-items: flex-start;
+    overflow-y: auto;
+    padding-bottom: 60px; 
   }
 
   .modal-content.scale-in {
-    padding: 24px; 
-    max-height: 90vh; 
+    padding: 20px; 
+    margin-top: 20px;
+    max-height: 80vh !important; 
+    overflow-y: auto !important; 
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .modal-desc-section {
+    flex-shrink: 1; 
   }
 
   /* Convert Table to Cards */
