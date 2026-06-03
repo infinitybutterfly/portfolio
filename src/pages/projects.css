@@ -495,3 +495,82 @@
   opacity: 0.7;
   text-decoration: underline;
 }
+
+/* Truncate long descriptions to 2 lines in the table */
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 4px;
+  color: #6b7280;
+}
+
+/* Make project title look clickable */
+.clickable-title {
+  cursor: pointer;
+  color: #111827; /* Or your primary theme color */
+  transition: color 0.2s ease;
+}
+
+.clickable-title:hover {
+  color: #6366f1; /* Highlight color on hover */
+  text-decoration: underline;
+}
+
+/* Project Details Modal specific styling */
+.project-details-modal {
+  max-width: 600px;
+  width: 90%;
+  padding: 24px;
+  border-radius: 12px;
+}
+
+.modal-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.modal-tag {
+  background-color: #f3f4f6;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.modal-status {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.modal-timeline {
+  font-size: 0.95rem;
+  color: #4b5563;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-desc-section h3 {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  color: #111827;
+}
+
+.modal-desc-section p {
+  color: #4b5563;
+  line-height: 1.6;
+  white-space: pre-wrap; /* Preserves line breaks if your API sends them */
+}
+
+.modal-footer {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-start;
+}
