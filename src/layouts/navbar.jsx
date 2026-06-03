@@ -16,7 +16,7 @@ const Navbar = () => {
   // Helper function to apply the active class dynamically
   const navClass = ({ isActive }) => (isActive ? 'nav-item active' : 'nav-item');
 
-  const resumeUrl = "https://poor-beige-gayal.myfilebase.com/ipfs/Qmd3jWk3kUgLxP5dZCBUycyCX14GRf9phKeMZxpCj9nDF8";
+  const resumeUrl = "https://poor-beige-gayal.myfilebase.com/ipfs/QmU7P6fjXqg8KyP4oh5AjC2JwhYN7teSTVNvgndL5L7Efr";
 
   const handleResumeClick = () => {
     window.open(resumeUrl, '_blank', 'noopener,noreferrer');
