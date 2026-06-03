@@ -1,6 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './projects.css';
 
+// --- Dynamic Description Formatter ---
+const renderDescription = (desc) => {
+  if (!desc) return null;
+  
+  // Check if the text contains bullet characters
+  if (desc.includes('•')) {
+    // Split by bullet, remove empty strings, and map to list items
+    const points = desc.split('•').filter(point => point.trim() !== '');
+    return (
+      <ul className="dynamic-desc-list">
+        {points.map((point, index) => (
+          <li key={index}>{point.trim()}</li>
+        ))}
+      </ul>
+    );
+  }
+  
+  // Fallback for standard paragraph text
+  return <p>{desc}</p>;
+};
+
 const Project = () => {
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -24,7 +45,7 @@ const Project = () => {
   const langDropdownRef = useRef(null);
   const typeDropdownRef = useRef(null);
 
-  // --- NEW: Modal State ---
+  // --- Modal State ---
   const [selectedProject, setSelectedProject] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -116,7 +137,7 @@ const Project = () => {
     setCurrentPage(1); 
   };
 
-  // NEW: Open/Close Modal Handlers
+  // Open/Close Modal Handlers
   const handleOpenModal = (project) => {
     setSelectedProject(project);
     setIsModalOpen(true);
@@ -256,19 +277,34 @@ const Project = () => {
                 <div className="empty-state">No projects found matching these filters.</div>
               ) : (
                 projects.map((project) => (
-                  <div className="table-row" key={project.id}>
+                  <div 
+                    className="table-row interactive-row" 
+                    key={project.id} 
+                    onClick={() => handleOpenModal(project)}
+                  >
                     <div className="col-project" data-label="Project">
-                      {/* Name is now clickable to open the modal */}
-                      <div className="project-title clickable-title" onClick={() => handleOpenModal(project)}>
-                        {project.name}
-                      </div>
-                      {/* Description truncated via CSS class */}
-                      {project.description && <div className="project-subtitle line-clamp">{project.description}</div>}
+                      
+                      <div className="project-title">{project.name}</div>
+                      
+                      {project.description && (
+                        <div className="project-subtitle line-clamp">
+                          {/* Strip bullet points just for the table preview */}
+                          {project.description.replace(/•/g, '').trim()}
+                        </div>
+                      )}
+                      
                       {project.url && (
-                        <a href={project.url} target="_blank" rel="noopener noreferrer" className="project-link">
+                        <a 
+                          href={project.url} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="table-live-link"
+                          onClick={(e) => e.stopPropagation()} 
+                        >
                           Live Link ↗
                         </a>
                       )}
+                      
                     </div>
                     <div className="col-text" data-label="Language">{project.language}</div>
                     <div className="col-text" data-label="Type">{project.type}</div>
@@ -336,37 +372,62 @@ const Project = () => {
 
       </div>
 
-      {/* --- NEW: Project Details Modal Overlay --- */}
+      {/* --- REFINED: Project Details Modal Overlay --- */}
       {isModalOpen && selectedProject && (
-        <div className="modal-overlay" onClick={handleCloseModal}>
-          <div className="modal-content project-details-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay fade-in" onClick={handleCloseModal}>
+          <div className="modal-content project-details-modal scale-in" onClick={(e) => e.stopPropagation()}>
+            
+            {/* Header: Title and Close Button properly aligned */}
             <div className="modal-header">
               <h2>{selectedProject.name}</h2>
-              <button className="close-btn" onClick={handleCloseModal}>&times;</button>
+              <button className="icon-close-btn" onClick={handleCloseModal} aria-label="Close">
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
             </div>
             
             <div className="modal-body">
-              <div className="modal-meta">
-                <span className="modal-tag">{selectedProject.language}</span>
-                <span className="modal-tag">{selectedProject.type}</span>
-                <span className="modal-status" style={{ color: getStatusColor(selectedProject.status) }}>
-                  ● {selectedProject.status}
-                </span>
+              
+              {/* Dynamic Pills for Meta Data */}
+              <div className="modal-meta-container">
+                <span className="tech-pill">{selectedProject.language}</span>
+                <span className="type-pill">{selectedProject.type}</span>
+                <div className="status-badge" style={{ color: getStatusColor(selectedProject.status), backgroundColor: `${getStatusColor(selectedProject.status)}15` }}>
+                  <span className="status-indicator" style={{ backgroundColor: getStatusColor(selectedProject.status) }}></span>
+                  {selectedProject.status}
+                </div>
               </div>
               
-              <div className="modal-timeline">
-                <strong>Timeline:</strong> {selectedProject.startDate} to {selectedProject.endDate || 'Present'}
+              {/* Timeline with Icon */}
+              <div className="modal-timeline-elegant">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2" fill="none">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>{selectedProject.startDate} &mdash; {selectedProject.endDate || 'Present'}</span>
               </div>
               
+              {/* Parsed Description */}
               <div className="modal-desc-section">
                 <h3>About the Project</h3>
-                <p>{selectedProject.description}</p>
+                <div className="desc-content">
+                  {renderDescription(selectedProject.description)}
+                </div>
               </div>
 
+              {/* Call to Action */}
               {selectedProject.url && (
                 <div className="modal-footer">
-                  <a href={selectedProject.url} target="_blank" rel="noopener noreferrer" className="filter-btn active" style={{textDecoration: 'none'}}>
-                    Visit Live Link ↗
+                  <a href={selectedProject.url} target="_blank" rel="noopener noreferrer" className="live-link-btn">
+                    Visit Live Link
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none">
+                      <line x1="7" y1="17" x2="17" y2="7"></line>
+                      <polyline points="7 7 17 7 17 17"></polyline>
+                    </svg>
                   </a>
                 </div>
               )}
