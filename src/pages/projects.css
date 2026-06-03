@@ -657,7 +657,12 @@
   .modal-body {
     overflow-y: auto;
     flex-grow: 1;
-    padding-right: 8px; 
+    padding-right: 24px; 
+    box-sizing: border-box;  
+  }
+
+  .dynamic-desc-list {
+    padding-left: 16px; 
   }
 
   .modal-footer {
