@@ -21,21 +21,22 @@ const Project = () => {
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isTypeOpen, setIsTypeOpen] = useState(false);
   
-  // NEW: Refs to detect clicks outside the dropdowns
   const langDropdownRef = useRef(null);
   const typeDropdownRef = useRef(null);
+
+  // --- NEW: Modal State ---
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const availableLangs = ['React', 'Dart', 'Python', 'C#', 'Kotlin', 'Java', 'JavaScript'];
   const availableTypes = ['Web', 'Mobile', 'AI / Backend', 'Desktop'];
 
-  // --- NEW: Click-Outside Listener for Dropdowns ---
+  // Click-Outside Listener for Dropdowns
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // If the user clicks anywhere that is NOT inside the Language dropdown, close it
       if (langDropdownRef.current && !langDropdownRef.current.contains(event.target)) {
         setIsLangOpen(false);
       }
-      // If the user clicks anywhere that is NOT inside the Type dropdown, close it
       if (typeDropdownRef.current && !typeDropdownRef.current.contains(event.target)) {
         setIsTypeOpen(false);
       }
@@ -60,7 +61,6 @@ const Project = () => {
         selectedLangs.forEach(lang => queryParams.append('languages', lang));
         selectedTypes.forEach(type => queryParams.append('types', type));
 
-        // const response = await fetch(`https://localhost:7253/api/projects?${queryParams}`);
         const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/projects?${queryParams}`);
         if (!response.ok) throw new Error('Network response was not ok');
         
@@ -116,6 +116,17 @@ const Project = () => {
     setCurrentPage(1); 
   };
 
+  // NEW: Open/Close Modal Handlers
+  const handleOpenModal = (project) => {
+    setSelectedProject(project);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedProject(null);
+  };
+
   const getPageNumbers = () => {
     const pages = [];
     if (totalPages <= 5) {
@@ -158,7 +169,7 @@ const Project = () => {
               On Hold
             </button>
 
-            {/* --- MULTI-SELECT DROPDOWNS (Now with click-outside Refs) --- */}
+            {/* --- MULTI-SELECT DROPDOWNS --- */}
             <div className="dropdown-container" ref={langDropdownRef}>
               <button className="filter-btn dropdown-toggle" onClick={() => setIsLangOpen(!isLangOpen)}>
                 Languages {selectedLangs.length > 0 && `(${selectedLangs.length})`} ▼
@@ -247,8 +258,12 @@ const Project = () => {
                 projects.map((project) => (
                   <div className="table-row" key={project.id}>
                     <div className="col-project" data-label="Project">
-                      <div className="project-title">{project.name}</div>
-                      {project.description && <div className="project-subtitle">{project.description}</div>}
+                      {/* Name is now clickable to open the modal */}
+                      <div className="project-title clickable-title" onClick={() => handleOpenModal(project)}>
+                        {project.name}
+                      </div>
+                      {/* Description truncated via CSS class */}
+                      {project.description && <div className="project-subtitle line-clamp">{project.description}</div>}
                       {project.url && (
                         <a href={project.url} target="_blank" rel="noopener noreferrer" className="project-link">
                           Live Link ↗
@@ -320,6 +335,45 @@ const Project = () => {
         )}
 
       </div>
+
+      {/* --- NEW: Project Details Modal Overlay --- */}
+      {isModalOpen && selectedProject && (
+        <div className="modal-overlay" onClick={handleCloseModal}>
+          <div className="modal-content project-details-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{selectedProject.name}</h2>
+              <button className="close-btn" onClick={handleCloseModal}>&times;</button>
+            </div>
+            
+            <div className="modal-body">
+              <div className="modal-meta">
+                <span className="modal-tag">{selectedProject.language}</span>
+                <span className="modal-tag">{selectedProject.type}</span>
+                <span className="modal-status" style={{ color: getStatusColor(selectedProject.status) }}>
+                  ● {selectedProject.status}
+                </span>
+              </div>
+              
+              <div className="modal-timeline">
+                <strong>Timeline:</strong> {selectedProject.startDate} to {selectedProject.endDate || 'Present'}
+              </div>
+              
+              <div className="modal-desc-section">
+                <h3>About the Project</h3>
+                <p>{selectedProject.description}</p>
+              </div>
+
+              {selectedProject.url && (
+                <div className="modal-footer">
+                  <a href={selectedProject.url} target="_blank" rel="noopener noreferrer" className="filter-btn active" style={{textDecoration: 'none'}}>
+                    Visit Live Link ↗
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
