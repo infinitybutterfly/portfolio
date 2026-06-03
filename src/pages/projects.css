@@ -661,9 +661,9 @@
     box-sizing: border-box;  
   }
 
-  .dynamic-desc-list {
+  /* .dynamic-desc-list {
     padding-left: 16px; 
-  }
+  } */
 
   .modal-footer {
     flex-shrink: 0;
